@@ -140,7 +140,7 @@ class _ShareMenu(MenuItem):
         url = response[2]
 
         metadata = self._get_metadata()
-        tags = '%s %s\n' % (metadata.get('tags', ''), url)
+        tags = '%s %s' % (metadata.get('tags', ''), url)
 
         ds_object = datastore.get(metadata['uid'])
         ds_object.metadata['tags'] = tags

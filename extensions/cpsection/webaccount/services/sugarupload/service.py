@@ -60,12 +60,16 @@ class WebService(WebService):
     def config_service_cb(self, widget, event, container):
         separator = Gtk.HSeparator()
 
-        tittle = Gtk.Label(label=_('Upload files to PutLocker'))
-        tittle.set_alignment(0, 0)
+        title = Gtk.Label(label=_('Upload files to PutLocker'))
+        title.set_alignment(0, 0)
+        title.set_line_wrap(True)
 
-        info = Gtk.Label(_("Please enter your username."
-                           " You can register in "
-                           "http://www.putlocker.com/authenticate.php?signup"))
+        info = Gtk.Label()
+        here = "http://www.putlocker.com/authenticate.php?signup"
+        markup = _("Please enter your username."
+                   " You can register in "
+                   "<a href='%s'>%s</a>" % (here, here))
+        info.set_markup(markup)
         info.set_alignment(0, 0)
         info.set_line_wrap(True)
 
@@ -80,37 +84,34 @@ class WebService(WebService):
                         style.COLOR_SELECTION_GREY.get_gdk_color())
 
         self._entry_user = Gtk.Entry()
-        self._entry_user.set_alignment(0)
         self._entry_user.set_size_request(int(Gdk.Screen.width() / 3), -1)
 
         self._entry_password = Gtk.Entry()
-        self._entry_password.set_alignment(0)
         self._entry_password.set_size_request(int(Gdk.Screen.width() / 3), -1)
         self._entry_password.set_visibility(False)
 
         self._entry_user.connect('key-press-event', self.__pressed_start_cb)
         self._entry_password.connect('key-press-event', self.__pressed_start_cb)
 
-        user_f = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        user_f.pack_start(user, False, True, 0)
-        user_f.pack_start(self._entry_user, False, True, 0)
-
-        password_f = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        password_f.pack_start(password, False, True, 0)
-        password_f.pack_start(self._entry_password, False, True, 0)
+        grid = Gtk.Grid()
+        grid.attach(user, 0, 1, 1, 1)
+        grid.attach(self._entry_user, 1, 1, 1, 1)
+        grid.attach(password, 0, 2, 1, 1)
+        grid.attach(self._entry_password, 1, 2, 1, 1)
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_column_spacing(style.DEFAULT_SPACING)
 
         vbox = Gtk.VBox()
         vbox.set_border_width(style.DEFAULT_SPACING * 2)
         vbox.set_spacing(style.DEFAULT_SPACING)
+        vbox.pack_start(title, False, True, 0)
         vbox.pack_start(info, False, True, 0)
-        vbox.pack_start(user_f, False, True, 0)
-        vbox.pack_start(password_f, False, True, 5)
+        vbox.pack_start(grid, False, True, 0)
 
         for c in container.get_children():
             container.remove(c)
 
         container.pack_start(separator, False, False, 0)
-        container.pack_start(tittle, False, True, 0)
         container.pack_start(vbox, False, True, 0)
         container.show_all()
 
