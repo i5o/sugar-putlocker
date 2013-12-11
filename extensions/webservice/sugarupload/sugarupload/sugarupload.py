@@ -38,9 +38,7 @@ class Upload(Object):
             param_upload('file', path))
 
     def _completed_cb(self, data):
-        data = "<data>%s</data>" % data
-
-        xml = ET.fromstring(data)
+        xml = ET.fromstring("<data>" + data + "</data>")
         message = xml[0].text
 
         if len(xml) > 1:
