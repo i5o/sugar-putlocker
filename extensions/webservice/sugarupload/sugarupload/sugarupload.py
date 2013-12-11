@@ -15,7 +15,7 @@
 from gettext import gettext as _
 
 from gi.repository import GConf
-from xml.dom import minidom
+import xml.etree.ElementTree as ET
 
 from .grestful.object import Object
 from .grestful.decorators import asynchronous
@@ -38,20 +38,17 @@ class Upload(Object):
             param_upload('file', path))
 
     def _completed_cb(self, data):
-        data = data.replace("\t", "").splitlines()
+        data = "<data>%s</data>" % data
 
-        string = minidom.parseString(data[0])
-        message = string.getElementsByTagName('message')[0].toxml()
-        message = message.replace('<message>', '').replace('</message>', '')
+        xml = ET.fromstring(data)
+        message = xml[0].text
 
-        if len(data) > 1:
-            string = minidom.parseString(data[1])
-            link = string.getElementsByTagName('link')[0].toxml()
-            link = link.replace('<link>', '').replace('</link>', '')
+        if len(xml) > 1:
+            link = xml[1].text
 
         alert_title = _('Upload service')
 
-        if len(data) > 1:
+        if len(xml) > 1:
             self.emit('completed', [alert_title, message, link])
         else:
             self.emit('failed', [alert_title, message])
