@@ -17,7 +17,6 @@ from gettext import gettext as _
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar3.datastore import datastore
 from sugar3.graphics.alert import NotifyAlert
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.menuitem import MenuItem
@@ -101,6 +100,7 @@ class _ShareMenu(MenuItem):
 
     def __init__(self, account, get_uid_list, is_active):
         MenuItem.__init__(self, ACCOUNT_NAME)
+        from sugar3.datastore import datastore
 
         self._account = account
         self.set_image(Icon(icon_name=ACCOUNT_ICON,
